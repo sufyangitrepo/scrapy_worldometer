@@ -1,7 +1,7 @@
 import scrapy
 from scrapy.spiders import Spider, CrawlSpider, Rule, Request
 
-""" This spider will extract the products details from a page """
+""" This spider will extract the products details from a page  """
 
 
 class SipSpider(Spider):
@@ -15,7 +15,9 @@ class SipSpider(Spider):
         yield Request(url=self.start_url, callback=self.parse,
                       headers={'User-Agent': self.user_agent}, )
 
-    # This fucntion will parse the response and also follow to other page
+    """ 
+       This fucntion will parse the response and also follow to other page
+    """
     def parse(self, response):
         for item in response.xpath('//div[@class = "block-inner"]'):
             link = item.xpath('.//a/@href').get()
@@ -24,7 +26,9 @@ class SipSpider(Spider):
             yield response.follow(abs_link, callback=self.parse_product_page, meta={'name': name},
                                   headers={'User-Agent': self.user_agent}, dont_filter=True, )
 
-    # This function will parse the products page and extract the products details
+    """ 
+       This function will parse the products page and extract the products details
+    """
     def parse_product_page(self, response):
         product_name = response.xpath(
             '//*[@id="shopify-section-product-template"]/div/div[2]/div[2]/h1/text()').get()
